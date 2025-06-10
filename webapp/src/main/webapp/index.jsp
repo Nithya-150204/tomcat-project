@@ -1,6 +1,6 @@
 <form action="action_page.php">
   <div class="container">
-    <h1>Registration App for DevOps Learning by Aryan Sahoo PSID - 10743412 </h1>
+    <h1>hello nitya</h1>
     <p>Please fill in this form to create an account.</p>
     <hr>
      
