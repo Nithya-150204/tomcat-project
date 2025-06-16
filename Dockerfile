@@ -236,3 +236,64 @@ sudo chmod 640 /etc/passwd-s3fs
 for mounting s3 bucket
  
 s3fs sanjaynn /mnt -o passwd_file=/etc/passwd-s3fs
+---------------------
+IAM
+
+Step-2:- Install the dependencies.
+ 
+-> In CentOS or Red Hat
+
+ sudo Yum update
+
+
+sudo yum install automake fuse fuse-devel gcc-c++ git libcurl-devel libxml2-devel make openssl-devel
+ 
+
+In Ubuntu or Debian
+
+
+sudo apt-get install automake autotools-dev fuse g++ git libcurl4-gnutls-dev libfuse-dev libssl-dev libxml2-dev make pkg-config
+Step-3:- Clone s3fs source code from git.
+
+
+git clone https://github.com/s3fs-fuse/s3fs-fuse.git
+ 
+
+Step-4:- Now change to source code  directory, and compile and install the code with the following commands:
+
+
+ll
+./autogen.sh
+./configure --prefix=/usr --with-openssl
+make
+sudo make install
+ 
+verify pkg
+which s3fs
+
+
+Step-7 :- Create a new file in /etc with the name passwd-s3fs and Paste the access key and secret key in the below format .
+
+1
+2
+touch /etc/passwd-s3fs
+vim /etc/passwd-s3fs
+1
+Your_accesskey:Your_secretkey
+ 
+
+Step-8:- change the permission of file
+
+
+sudo chmod 640 /etc/passwd-s3fs
+
+
+########################
+for mounting s3 bucket
+
+# s3fs sanjaynn /mnt -o passwd_file=/etc/passwd-s3fs
+
+#df -h
+
+Note For Redhat s3 Mounting
+s3fs -o iam_role="s3role" -o url="https://s3-ap-south-1.amazonaws.com" -o endpoint=ap-south-1 -o dbglevel=info -o curldbg -o allow_other -o use_cache=/tmp sanjaynetwork /var/s3fs-demofs
