@@ -230,3 +230,29 @@ ubuntu
    10  df -h
    11  cd /root/devops
    12  ll
+
+----------------------------------------------------
+create a instance 
+create snapshot from root volume
+from snapshot create a new vol ---data volume ---attach volume to instance
+connect the instance through cmd
+sudo su -
+lsblk
+mkfs.ext4 /dev/xvdb
+df  -h
+mkdir /data
+mount /dev/xvdb /data/
+df -h
+cd /data
+touch index.txt{1..20}
+if you want to make the mount permanent like if any reboot happend then also the mount has to be there so for that
+blkid
+vim /etc/fstab
+edit 1st line like this
+UUID=abcd-1234 /data  ext4 dafaults,nofail 0 2
+reboot and login again you will see your data
+sudo su -
+cd /data
+ll
+
+----------------------------------------------------------
