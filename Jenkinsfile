@@ -163,3 +163,70 @@ jenkins_on_aws
 
 :: You can check the status of the Jenkins service using the command
 --- systemctl status jenkins
+----------------
+
+
+ -create and instace with the security of http
+-   1 sudo yum update -y
+    2  yum install httpd -y
+    3  systemctl start httpd
+    4  systemctl enable httpd
+    5  echo "hello everyone welcome to webserver" | sudo tee /var/www/html/index.html
+    6  history
+paste the id in google with http://(id)
+
+
+---------
+ands on lab and exersisescreate custome image
+
+#!/bin/bash
+yum update -y
+yum install httpd -y
+echo "heloo this is example for user" > /var/www/html/index.html
+systemctl start httpd
+systemctl enable httpd
+
+-----------
+
+ EFS
+
+aws (normal)
+ot@ip-172-31-14-229 efs]# history
+    1  yum install nfs-utils -y
+    2  systemctl restart nfs-server
+    3  systemctl enable nfs-server
+    4  systemctl status nfs-server
+    5  mkdir efs
+    6  sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 172.31.15.204:/ efs
+    7  df -h
+    8  cd /root/efs/
+    9  touch devops.txt{1..10}
+   10  ll
+---------------
+redhat-1b
+ yum install nfs-utils -y
+    2  systemctl start nfs-server
+    3  systemctl enable nfs-server
+    4  systemctl status nfs-server
+    5  sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 172.31.15.204:/ efs
+    6  mkdir remote
+    7  sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 172.31.15.204:/ remote
+    8  df -h
+    9  cd /root/remote
+   10  ll
+
+-----------------
+ubuntu
+
+ apt-get update
+    2  apt install nfs-common
+    3  systemctl status nfs-common.service
+    4  systemctl unmask nfs-common.service
+    5  systemctl start nfs-common.service
+    6  systemctl enable nfs-common.service
+    7  systemctl status nfs-common.service
+    8  mkdir devops
+    9  sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 172.31.15.204:/ devops
+   10  df -h
+   11  cd /root/devops
+   12  ll
