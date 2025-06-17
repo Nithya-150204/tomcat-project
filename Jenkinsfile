@@ -256,3 +256,24 @@ cd /data
 ll
 
 ----------------------------------------------------------
+
+ vpc:
+1.vpc>create>my-vpc>10.0.0.0/16>
+2.igw>attach to vpc
+3.subnet > pub -1a-10.0.0.0/24
+4.pri>1b-10.0.1.0/25
+5.routetable>pub-subnet assco-edit routes-igw
+pri-subnet Assoc -
+6.create nategateway(pub)-allocate elastic ip-add to pri
+7.ec2-pub-assign public enable-create sec grp,add http icmp
+pri-create new key
+8.connect public:
+sudo su -
+yum install httpd -y
+systemctl restart httpd
+systemctl enable httpd 
+vim pri.pem(private key file name)
+chmod 400 pri.pem
+(now copy private instc id)
+ sudo su -
+ping google.com
