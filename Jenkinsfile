@@ -278,3 +278,205 @@ chmod 400 pri.pem
 (now copy private instc id)
  sudo su -
 ping google.com
+--------------------
+ Jenkins:
+ 
+sudo su -
+
+
+hostnamectl set-hostname jenkins.example.com
+
+
+bash
+
+
+yum update –y
+
+
+wget -O /etc/yum.repos.d/jenkins.repo \
+https://pkg.jenkins.io/redhat-stable/jenkins.repo
+
+
+rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+
+yum upgrade
+
+
+yum install java-17-amazon-corretto -y
+
+
+yum install jenkins -y
+
+
+systemctl enable Jenkins
+
+
+systemctl start Jenkins
+
+
+systemctl status Jenkins
+
+
+yum install git -y
+
+
+yum install maven
+
+
+mvn -v  (copy the path for java and maven and paste it in Dashboard > manage Jenkins > tools > add java , maven )
+ 
+ 
+ip:8080 open this using public ip
+ 
+ 
+cat /var/lib/jenkins/secrets/initialAdminPassword   ( copy the key and paste it in Jenkins)
+
+
+( configure Jenkins)
+ 
+add the webhook (Jenkins > profile > security > add key (copy key) > go to git repo setting > add webhook > ip:8080/github-webhook/
+
+
+                                                                                                             json
+
+
+                                                                                                             paste key
+
+
+                                                                                                             add webhook
+ 
+Dashboard > manage plugin > available plugin > install maven, GitHub in, deployer
+
+
+copy the path for java and maven and paste it in Dashboard > manage Jenkins > tools > add java , maven
+ 
+new iteam > maven project > ok > paste git http link  and change /master to /main > save and apply
+ 
+Build now
+
+
+copy the cat path and paste it in the Jenkins cli as : cd /var/.......... (past the output)
+
+
+DOCUMENT THE OUTPUT
+ 
+TOMCAT LINK : https://medium.com/@raguyazhin/step-by-step-guide-to-install-apache-tomcat-on-amazon-linux-120748a151a9
+ 
+LINUX QUESTIONS
+ 
+LiNUX
+
+
+ques.Create the following users,groups and group membership
+
+
+-A group named sysadm
+
+
+-A user "harry" who belongs to sysadm as a secondary group.
+
+
+-A user "natasha" who belongs to sysadm as a secondary group.
+
+
+-A user "sarah" who does not have the access to an interactive shell and who is not a member of sysadm group.
+
+
+-"harry" "natasha"  and "sarah" should all have password of password 
+
+
+SOl:-
+
+
+cat /etc/group
+
+
+groupadd sysadm
+
+
+cat /etc/group/ -i sysadm
+
+
+useradd harry
+
+
+passwd harry same for natasha and sarah
+
+
+usermod -G sysadm harry
+
+
+usermod -G sysadm natasha
+
+
+usermod -s /sbin/nologin sarah
+ 
+ 
+##################################################################################################################
+ 
+ 
+-->adding same user in 2 groups
+ 
+
+
+
+useradd -a -G sales Sam
+
+
+useradd -a -G market Sam
+
+
+cat /etc/group | grep -i sales
+ 
+ 
+####################################################################################################################
+ 
+ 
+ques.create a collabrative directory /shared/sysadm with th following characteristics:
+
+
+-Group owernship of /shared/sysadm is sysadm
+
+
+-The directory should be readable , writable and accesiable to member of sysadm . but not to any other user.
+
+
+-Files created in /shared/sysadm automatically have group owernshipset to the sysadm group
+
+
+sol:-
+
+
+mkdir -p /shared/sysadm
+
+
+ll -d /shared/sysadm
+
+
+chgrp sysadm /shared/sysadm
+
+
+ll -d /shared/syadm
+
+
+chmod 770 /shared/sysadm
+
+
+ll -d /shared/syadm
+
+
+chmod g+s /shared/sysadm
+
+
+su -harry
+
+
+cd /shared/sysadm
+
+
+ll touch harry-file
+ 
+ 
+ 
+ 
