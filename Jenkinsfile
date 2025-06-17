@@ -245,6 +245,7 @@ mount /dev/xvdb /data/
 df -h
 cd /data
 touch index.txt{1..20}
+ll
 if you want to make the mount permanent like if any reboot happend then also the mount has to be there so for that
 blkid
 vim /etc/fstab
