@@ -480,3 +480,45 @@ ll touch harry-file
  
  
  
+-------------------
+                 s3 bucket:
+create buck > uncheck all > version enable > acls enable > uncheck block all public access
+upload file > add > permission > grant public read acess
+url of image
+
+iAM :
+CREATE USER > attach policies directly > permission - amazon s3 fullaccess > create user
+select user > security credentials > access keys > create access > cli > create access key
+
+ec2instance..commands
+sudo su -
+ 1  yum update -y
+    2  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    3  unzip awscliv2.zip
+    4  sudo ./aws/install
+    5  yum install python* -y
+    8  aws --version
+    9  aws configure
+   10  ll
+   11  cd .aws/
+   14  sudo yum install automake fuse fuse-devel gcc-c++ git libcurl-devel libxml2-devel make openssl-devel
+   15  git clone https://github.com/s3fs-fuse/s3fs-fuse.git
+   16  ll  
+   19  cd  s3fs-fuse
+   20  ./autogen.sh
+   21  ./configure --prefix=/usr --with-openssl
+   22  make
+   23  sudo make install
+   26  touch /etc/passwd-s3fs
+   27  vim /etc/passwd-s3fs
+   28  sudo chmod 640 /etc/passwd-s3fs
+   29  s3fs 15june25  /mnt -o passwd_file=/etc/passwd-s3fs
+   30  df -h
+   31  s3fs -o iam_role="s3role" -o url="https://s3-ap-south-1.amazonaws.com" -o endpoint=ap-south-1 -o dbglevel=info -o curldbg -o allow_other -o use_cache=/tmp sanjaynetwork /var/s3fs-demofs
+   32  cd /mnt
+   34  ll
+   35  vim pav.txt
+   36  cd
+   37  cd /mnt
+   38  vim sp.txt
+   39  ll
