@@ -297,3 +297,152 @@ for mounting s3 bucket
 
 Note For Redhat s3 Mounting
 s3fs -o iam_role="s3role" -o url="https://s3-ap-south-1.amazonaws.com" -o endpoint=ap-south-1 -o dbglevel=info -o curldbg -o allow_other -o use_cache=/tmp sanjaynetwork /var/s3fs-demofs
+
+-----------------------------
+create a instance 
+create snapshot from root volume
+from snapshot create a new vol ---data volume ---attach volume to instance
+connect the instance through cmd
+sudo su -
+lsblk
+mkfs.ext4 /dev/xvdb
+df  -h
+mkdir /data
+mount /dev/xvdb /data/
+df -h
+cd /data
+touch index.txt{1..20}
+if you want to make the mount permanent like if any reboot happend then also the mount has to be there so for that
+blkid
+vim /etc/fstab
+edit 1st line like this
+UUID=abcd-1234 /data  ext4 dafaults,nofail 0 2
+reboot and login again you will see your data
+sudo su -
+cd /data
+ll
+
+---------------------
+🔧 STEP 1: CREATE A VPC
+Go to the AWS Console → VPC → Your VPCs → Create VPC.
+Name tag: MyVPC
+IPv4 CIDR block: 10.0.0.0/16
+leave others default
+➡️ Click Create VPC
+
+🌐 STEP 2: CREATE SUBNETS
+Go to VPC → Subnets → Create Subnet
+
+🔹 2.1 Public Subnet
+Name: PublicSubnet
+VPC: Select MyCustomVPC
+Availability Zone: Select one (e.g., us-east-1a)
+CIDR block: 10.0.1.0/24 (gives 256 IPs)
+Click Create subnet
+
+🔹 2.2 Private Subnet
+Name: PrivateSubnet
+VPC: Same VPC
+Availability Zone: Use a different one if possible (e.g., us-east-1b)
+CIDR block: 10.0.2.0/24
+Click Create subnet
+
+🌍 STEP 3: CREATE AN INTERNET GATEWAY (IGW)
+Go to VPC → Internet Gateways → Create Internet Gateway
+Name: MyIGW
+➡️ After creation, click on it → Actions → Attach to VPC → Select MyVPC
+
+🔁 STEP 4: CONFIGURE ROUTE TABLES
+🔹 4.1 Public Route Table
+Go to VPC → Route Tables → Create Route Table
+Name: PublicRouteTable
+VPC: MyVPC
+After creation:
+Click on PublicRouteTable
+Go to Routes → Edit Routes
+Destination: 0.0.0.0/0
+Target: Internet Gateway → MyInternetGateway
+➡️ Subnet Associations tab → Associate it with PublicSubnet
+
+📡 STEP 5: ENABLE AUTO PUBLIC IP FOR PUBLIC SUBNET
+Go to VPC → Subnets → Select PublicSubnet
+Click Actions →Edit subnet---- Modify auto-assign IP
+Enable: ✅ Auto-assign public IPv4 address
+Click Save
+
+🔐 STEP 6: CREATE INSTANCES AND MODIFY SECURITY GROUPS
+create instance name : public --key pair ---network settings --- VPC --select created MyVPC---Subnet --- PublicSubnet----auto assign --enable ----create security ---name : vpc-pub---------launch
+create instance name : private --key pair ---network settings --- VPC --select created MyVPC---Subnet --- PrivateSubnet----auto assign --disable ----create security ---name : vpc-prv---------launch
+Go to EC2 → Security Groups → Create security group
+🔹 For Public EC2 Instance
+Name: PublicEC2SG
+VPC: MyVPC
+Inbound rules:
+SSH – Port 22 – Source: Your IP (x.x.x.x/32)
+Outbound rules: Allow all (default)
+🔹 For Private EC2 Instance
+Name: PrivateEC2SG
+Inbound rules:
+SSH – Port 22 – Source: PublicEC2SG or 10.0.1.0/24
+Outbound rules: Allow all
+
+🌐 STEP 7: CREATE A NAT GATEWAY FOR PRIVATE INTERNET ACCESS
+🔹 7.1 Allocate Elastic IP
+Go to EC2 → Elastic IPs → Allocate → Allocate
+🔹 7.2 Create NAT Gateway
+Go to VPC → NAT Gateways → Create NAT Gateway
+Subnet: PublicSubnet
+Elastic IP: Use the one you just created
+Name: MyNATGateway
+➡️ Click Create and wait until it's available
+
+🔄 STEP 8: UPDATE PRIVATE ROUTE TABLE
+Go to VPC → Route Tables → Create Route Table
+Name: PrivateRouteTable
+VPC: MyVPC
+After creation:
+Routes → Edit Routes
+Destination: 0.0.0.0/0
+Target: NAT Gateway → MyNATGateway
+Subnet Associations: Associate it with PrivateSubnet
+
+GO TO INSTACE PUBLIC AND CONNECT THROUGH SSH IN TERMINAL
+sudo su -
+yum install httpd
+systemctl enable httpd
+systemctl start httpd
+cd /var/www/html
+vim index.html
+copy ip address and paste in browser your index.html has to be visible  [in inbound rules add http ]
+vim sanath.pem 
+copy and paste key value 
+chmod 400 sanath.pem
+now connect the instance private through the instance public 
+sudo su -
+ping google.com
+
+--------------------------------------
+same for ohio region
+###########
+passwd root
+vim /etc/ssh/sshd_config{rootpermitlogin ,yes}
+systemctl enable sshd
+systemctl start sshd
+systemctl restart sshd
+
+in both regions 
+##########
+vim index.txt
+scp index.txt root@another regiop ip :/tmp
+
+same for anther region
+###########
+create peering in any VPC and add another region and give VPC id  and create 
+accept in another region
+
+add perring in routes table for public and private 
+in ip you have to give the vpc ipv4 ip 
+same for public and private 
+
+same for another region
+#######################
